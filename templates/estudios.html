@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Estudios Obtenidos</title>
+    <link rel="stylesheet" href="{% static 'css/css.css' %}"> <!-- Vincula tu CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+{% endblock head %}
+
+{% block content %}
+    <div class="container">
+        <br><br><br>
+        <h1 class="text-center" style="margin-top: 20px;">ESTUDIOS OBTENIDOS</h1>
+
+        <!-- Número de registros -->
+        <div class="text-center">
+            <h4>Total de estudios: {{ estudios_list.paginator.count }}</h4>
+        </div>
+
+        <table class='table table-bordered'>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Titulación</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Fin</th>
+                    <th>Nota Media</th>
+                    <th>Lugar de Estudio</th>
+                    <th>Nombre del Lugar</th>
+                    <th>Ciudad</th>
+                    <th>Presencial</th>
+                    <th>Observaciones</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudio in estudios_list %}
+                    <tr>
+                        <td>{{ estudio.id }}</td>
+                        <td>{{ estudio.titulacion }}</td>
+                        <td>{{ estudio.fechaInicio }}</td>
+                        <td>{{ estudio.fechaFin }}</td>
+                        <td>{{ estudio.notaMedia }}</td>
+                        <td>{{ estudio.lugarEstudio }}</td>
+                        <td>{{ estudio.nombreLugar }}</td>
+                        <td>{{ estudio.ciudad }}</td>
+                        <td>{% if estudio.presencial %}Sí{% else %}No{% endif %}</td>
+                        <td>{{ estudio.observaciones }}</td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="{% url 'home' %}">Ver</a>
+                            <a class="btn btn-info btn-sm" href="{% url 'home' %}">Editar</a>
+                            <a class="btn btn-info btn-sm" href="{% url 'home' %}">Eliminar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center">No se encontraron estudios.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    <center>
+        <img src="{% static "images/estudio.JPG" %}" alt="niños estudiando">
+    </center>
+        <!-- Paginación -->
+        {% if estudios_list.has_other_pages %}
+        <font size="4">
+            <ul class="pagination">
+                {% if estudios_list.has_previous %}
+                <li><a href="?page={{ estudios_list.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+
+                {% for i in estudios_list.paginator.page_range %}
+                {% if estudios_list.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if estudios_list.has_next %}
+                    <li><a href="?page={{ estudios_list.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                     <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+        </font>
+        {% endif %}
+    </div>
+{% endblock content %}

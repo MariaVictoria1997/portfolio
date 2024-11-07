@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block head %}
+    <title>Registrar Usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
+            integrity="sha512-K1qjQ+NcF2TVO/el3MV6v8EINYZfA59pQumfvcVrTtHwvQVDG+HaRql/ETn2uB+1JqyWqV3LGuNyd9lm5jm/pQ==" 
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" 
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+          integrity="sha512-dTfge/zgOMwP7p0bh4Yg4WMbGsbdzeCXrZJtri9C3PFUtoFkbuFDz/iXgA7rTxmDjXDcmeHubeNikyKGVQyQ==" 
+          crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+<br><br><br><br>
+<div class="container">
+    <p class="text-white h2">REGISTRAR USUARIO</p>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+        <label for="password2">Confirm Password:</label>
+        <input type="password" name="password2" required>
+        <button type="submit">Registrar</button>
+    </form>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

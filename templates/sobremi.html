@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Portfolio</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+ {% endblock %}
+
+
+{% block content %}
+
+ <br><br><br><br>
+ <center>
+ <font size="3">
+    <center>
+        <h1>SOBRE MI</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th bgcolor="#F5DA81">DATO</th>
+                    <th bgcolor="#F5DA81">VALOR</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>NOMBRE:</td>
+                    <td>{{ nombre }}</td>
+                </tr>
+                <tr>
+                    <td>EDAD</td>
+                    <td>{{ edad }}</td>
+                </tr>
+                <tr>
+                    <td>TELEFONO</td>
+                    <td>{{ telefono }}</td>
+                </tr>
+                <tr>
+                    <td>CARGO</td>
+                    <td>{{ cargo }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+
+    <br><br>
+
+    <center>
+        <h1>LISTADO CATEGORIAS</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th bgcolor="#F5DA81">CODIGO:</th>
+                    <th bgcolor="#F5DA81">CATEGORIA</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in listarCategorias %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.nombre_categoria }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </center>
+</font>
+
+{% if listarCategorias.has_other_pages %}
+<font size="4">
+    <ul class="pagination">
+        {% if listarCategorias.has_previous %}
+        <li><a href="?page={{ listarCategorias.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+
+        {% for i in listarCategorias.paginator.page_range %}
+        {% if listarCategorias.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if listarCategorias.has_next %}
+        <li><a href="?page={{ listarCategorias.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+</font>
+{% endif %}
+</center>
+{% endblock content %}
+

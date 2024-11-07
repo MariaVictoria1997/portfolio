@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Networking</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style type="text/css">
+    .imgRedonda60 {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    }
+</style>
+{% endblock %}
+
+ {% block content %}
+
+ {# {% include "carousel.html" %} #}
+ <br><br><br><br>
+ {% if not request.user.is_authenticated %}
+<center>
+ <h1>PÁGINA DE INICIO</h1>
+   <!-- ><img src="{% static 'appportfolio/bootstrap/imagenes/marta.png'%}" height='340' width='390'>-->
+    <img src="{% static 'images/globos.jpg'%}" height='250' width='250'>
+    <img src="{% static 'images/vicky.jpg'%}" height='250' width='250'>
+    <img src="{% static 'images/globos.jpg'%}" height='250' width='250'>
+ </center>
+ {% endif %}
+
+ {% if request.user.is_authenticated %}
+  <center>
+  <font color="#686868" size="5" face="Comic Sans MS,Arial,Verdana">LISTADO DE ESTUDIOS OFICIALES</font>
+   </center>
+ {% endif %}
+ {% if not request.user.is_authenticated %}
+  <a href="{% url 'login' %}">Login</a>
+  <a href="{% url 'register' %}">Register</a>
+ {% else %}
+   <div class="user d-inline-block">
+       <span class="name">{{ user.username }}</span>
+       <span><img alt="niña" src="{{fotoperfil}}" class="imagenRedonda60"/></span>
+   </div>
+    <p> Bienvenido, {{ user.username }}</p>
+ {% endif %}
+{% endblock content %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{# {% load staticfiles %} #}
+{% load static %}
+
+{% block head %}
+<title>Networking</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+ {% endblock %}
+
+ {% block content %}
+
+ <br><br><br><br>
+  <center>
+  <font color="#686868" size="5" face="Comic Sans MS,Arial,Verdana">EXPERIENCIAS</font>
+   <br>
+  <img src="{% static 'images/experiencia.JPG'%}" height='340' width='390'>
+  </center>
+
+ {% if not request.user.is_authenticated %}
+
+ {% endif %}
+
+ {% if request.user.is_authenticated %}
+ {% endif %}
+
+<font size="3">
+<table class="table table-bordered">
+	<thead>
+        <tr>
+			<th bgcolor="#F5DA81">ID</th>
+			<th bgcolor="#F5DA81">EMPRESA</th>
+			<th bgcolor="#F5DA81">FECHA INICIO</th>
+            <th bgcolor="#F5DA81">FECHA FIN</th>
+			<th colspan="4" style="text-align:center;" bgcolor="#AAF5AA">OPERACIONES</th>
+            <th bgcolor="#F5DA81">CATEGORIA</th>
+        </tr>
+		</thead>
+		<tbody>
+        {% for r in experiencia_list %}
+            <td> {{ r.id }} </td>
+            <td> {{ r.empresa|upper|slice:"0:12" }} </td>
+            <td> {{ r.fecha_inicio }} </td>
+            <td> {{ r.fecha_fin}} </td>
+            <td> {{ r.observaciones}} </td>
+
+            <form action="" method="post">
+            {% csrf_token %}
+			<!-- ojo las url no llevan / -->
+			<td><a class='btn btn-primary btn-sm' href="{% url 'ver_experiencia' id=r.id %}">VER</a></td>
+			<td><a class='btn btn-danger btn-sm'  href="{% url 'eliminarExperiencia' pk=r.id %}">ANULAR</a></td>
+			<td><a class='btn btn-success btn-sm' href="{% url 'home' %}">EDITAR</a></td>
+            </form>
+            <td> {{ r.categoria}} </td><
+          </tr>
+        {% endfor %}
+		 </tbody>
+    </table>
+</font>
+
+{% if experiencia_list.has_other_pages %}
+<font size="4">
+  <ul class="pagination">
+    {% if experiencia_list.has_previous %}
+      <li><a href="?page={{ experiencia_list.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in experiencia_list.paginator.page_range %}
+      {% if reservas.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if experiencia_list.has_next %}
+      <li><a href="?page={{ experiencia_list.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+</font>
+{% endif %}
+{% endblock content %}

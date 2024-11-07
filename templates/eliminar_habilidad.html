@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{# {% load staticfiles %} #}
+{% load static %}
+
+{% block head %}
+<title>Networking</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+ {% endblock %}
+
+ {% block content %}
+     <!--hasta aqui siempre se pone -->
+    <br><br><br><br>
+    <h1>Eliminar habilidad</h1>
+    <p><¿Estás seguro de que deseas eliminar esta habilidad {{ habilidad.habilidad }} ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <p>Habilidad: {{ habilidad.habilidad }}</p>
+        <p>Nivel: {{ habilidad.nivel }}</p>
+        <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+        <a href="{% url 'habilidades' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock content %}

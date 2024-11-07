@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Persona</title>
+</head>
+<body>
+  <h1>Editar Persona</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <label for="nombre">Nombre:</label>
+    <input type="text" name="nombre" id="nombre" value="{{ persona.nombre }}" required><br>
+
+    <label for="ap1">Primer Apellido:</label>
+    <input type="text" name="ap1" id="ap1" value="{{ persona.ap1 }}" required><br>
+
+    <label for="ap2">Segundo Apellido:</label>
+    <input type="text" name="ap2" id="ap2" value="{{ persona.ap2 }}" required><br>
+
+    <label for="edad">Edad:</label>
+    <input type="number" name="edad" id="edad" value="{{ persona.edad }}" required><br>
+
+    <button type="submit">Guardar</button>
+  </form>
+</body>
+</html>
