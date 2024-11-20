@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 ################################################
 # Tabla 1- Habilidades 
 ################################################
@@ -162,3 +163,73 @@ class Entrevistador(models.Model):
         return "%s,%s,%s,%s,%s,%s" % (self.id, self.empresa, self.fecha_entrevista, self.conectado, self.seleccionado, self.user)
 
 
+class Curriculum(models.Model):
+    id = models.AutoField(primary_key=True)  # Aquí se corrigió "true" por "True"
+    nombre = models.CharField(max_length=100)
+    ap1 = models.CharField(max_length=100)
+    ap2 = models.CharField(max_length=100)
+    email = models.EmailField()
+    telefono = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"{self.nombre} {self.ap1} {self.ap2}"
+
+
+class DetalleCurriculumEstudio(models.Model):
+    id = models.AutoField(primary_key=True)  # Aquí también se corrigió
+    estudio = models.ForeignKey(Estudio, on_delete=models.CASCADE)
+    curriculum = models.ForeignKey(Curriculum, on_delete=models.CASCADE)  # Usar el modelo correcto
+
+    def __str__(self):
+        return f"{self.estudio.nombre} para {self.curriculum.nombre}"
+
+
+class DetalleCurriculumExperiencia(models.Model):
+    id = models.AutoField(primary_key=True)  # Aquí también se corrigió
+    experiencia = models.ForeignKey(Estudio, on_delete=models.CASCADE)
+    curriculum = models.ForeignKey(Curriculum, on_delete=models.CASCADE)  # Usar el modelo correcto
+
+    def __str__(self):
+        return f"{self.experiencia.empresa} para {self.curriculum.nombre}"
+
+class Noticia(models.Model):
+    id = models.AutoField(primary_key=True)
+    titulo = models.CharField(max_length=200)
+    contenido = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    imagen = models.ImageField('Imagen', blank=True, null =True, upload_to="media/")
+
+    def __str__(self):
+        return self.titulo
+
+class Valoracion(models.Model):
+    id = models.AutoField(primary_key=True)
+    votos_entrevista = models.DecimalField(
+        "Votos Entrevista", max_digits=5, decimal_places=2, null=True, blank=True
+    )
+    votos_empresa = models.DecimalField(
+        "Votos Empresa", max_digits=5, decimal_places=1, null=True, blank=True
+    )
+    media_aspectos = models.DecimalField(
+        "Media Aspectos", max_digits=5, decimal_places=2, null=True, blank=True
+    )
+    entrevista = models.CharField(
+        "Descripción Entrevista", max_length=300, null=True, blank=True
+    )
+    empresa = models.CharField(
+        "Descripción Empresa", max_length=200, null=True, blank=True
+    )
+    valoraciones = models.IntegerField(
+        "Nº Valoraciones", null=True, blank=True
+    )
+    timestamp = models.DateTimeField("Fecha", default=timezone.now)
+
+    def __str__(self):
+        return (
+            f"ID: {self.id}, "
+            f"Votos Entrevista: {self.votos_entrevista}, "
+            f"Votos Empresa: {self.votos_empresa}, "
+            f"Media Aspectos: {self.media_aspectos}, "
+            f"Entrevista: {self.entrevista}, "
+            f"Fecha: {self.timestamp}"
+        )

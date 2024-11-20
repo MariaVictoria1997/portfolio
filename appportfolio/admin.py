@@ -54,3 +54,40 @@ class EntrevistadorAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Entrevistador._meta.get_fields() if hasattr(field, 'verbose_name')]
     search_fields = ('id','empresa')
 admin.site.register(Entrevistador, EntrevistadorAdmin)
+
+class CurriculumAdmin(admin.ModelAdmin):
+    list_display = ['id', 'nombre', 'ap1', 'ap2', 'email', 'telefono']
+    search_fields = ('id', 'nombre', 'ap1', 'ap2', 'email', 'telefono')  # Siempre deben ser tuplas
+    list_filter = ('id', 'nombre', 'ap1', 'ap2')  # Siempre deben ser tuplas
+
+admin.site.register(Curriculum, CurriculumAdmin)
+
+class DetalleCurriculumEstudioAdmin(admin.ModelAdmin):
+    list_display = ['id', 'estudio', 'curriculum']
+    search_fields = ('id', 'estudio__nombre', 'curriculum__nombre')  # Acceso a campos relacionados
+    list_filter = ('estudio', 'curriculum')
+
+admin.site.register(DetalleCurriculumEstudio, DetalleCurriculumEstudioAdmin)
+
+class DetalleCurriculumExperienciaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'experiencia', 'curriculum']
+    search_fields = ('id', 'experiencia__empresa', 'curriculum__nombre')  # Acceso a campos relacionados
+    list_filter = ('experiencia', 'curriculum')
+
+admin.site.register(DetalleCurriculumExperiencia, DetalleCurriculumExperienciaAdmin)
+
+class NoticiaAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Noticia._meta.get_fields() if hasattr(field, 'verbose_name')]
+    search_fields = ('id','titulo')
+admin.site.register(Noticia, NoticiaAdmin)
+
+@admin.register(Valoracion)
+class ValoracionAdmin(admin.ModelAdmin):
+    list_display = ("id", "votos_entrevista", "votos_empresa", "media_aspectos", "timestamp")
+    readonly_fields = ('media_aspectos',)
+
+    def save_model(self, request, obj, form, change):
+        # Calcula automáticamente la media antes de guardar
+        if obj.votos_entrevista and obj.votos_empresa:
+            obj.media_aspectos = (obj.votos_entrevista + obj.votos_empresa) / 2
+        super().save_model(request, obj, form, change)

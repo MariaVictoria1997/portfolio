@@ -1,24 +1,25 @@
 # -*-coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
-from lib2to3.fixes.fix_input import context
-from django.conf import settings
-
-from django.shortcuts import render
-from django.http import HttpResponse
-from appportfolio.models import *
-from django.shortcuts import redirect
-from django.core.paginator import Paginator
-from .models import Estudio
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.shortcuts import render
-import urllib
-# email
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.contrib import messages
+import os  # Manejo de archivos y rutas
+from django.conf import settings  # Configuración global del proyecto
+from django.shortcuts import render, get_object_or_404, redirect  # Funciones para vistas
+from django.http import HttpResponse  # Respuesta HTTP
+from django.core.paginator import Paginator  # Paginación
+from django.contrib.auth.models import User  # Modelo de usuario
+from django.contrib.auth import authenticate, login, logout  # Autenticación
+from django.contrib import messages  # Mensajes de Django
+from django.core.mail import EmailMessage  # Para envío de emails
+from django.template.loader import render_to_string  # Renderizado de plantillas para email
+from reportlab.lib.pagesizes import letter  # Tamaño de página PDF
+from reportlab.pdfgen import canvas  # Generador de PDF
+from reportlab.lib import colors  # Colores para el PDF
+from reportlab.lib.utils import ImageReader  # Para insertar imágenes en PDFs
+from appportfolio.models import * #importamos el modelo de todos
+# Importar modelos de la aplicación
+from appportfolio.models import Entrevistador, Curriculum, DetalleCurriculumEstudio, DetalleCurriculumExperiencia, Estudio
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Valoracion
 # Create your views here.
 
 def home(request):
@@ -246,7 +247,8 @@ def subir_videos(request):
                 v.save()
         return redirect('subir_videos')
     videos = Video.objects.all()
-    return render(request, 'subir_videos.html', {'videos': videos})
+    context = {'videos': videos}
+    return render(request, 'subir_videos.html', context=context)
 def eliminar_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     if request.method == 'POST':
@@ -305,3 +307,209 @@ def contacto(request):
         messages.success(request, 'Se ha enviado tu email')
         return redirect('home')
     return render(request, 'correo.html')
+
+def listar_entrevistadores(request):
+    entrevistadores = Entrevistador.objects.all()
+    return render(request, 'listar_entrevistadores.html', {'entrevistadores':entrevistadores})
+
+# Generar PDF para Entrevistador
+def generar_pdf_entrevistador(request, entrevistador_id):
+    entrevistador = get_object_or_404(Entrevistador, id=entrevistador_id)
+
+    # Crear una respuesta HTTP con contenido tipo PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="entrevistador_{entrevistador.id}.pdf"'
+
+    # Crear el objeto canvas de ReportLab
+    p = canvas.Canvas(response, pagesize=letter)
+
+    # Configuración del título
+    p.setFont("Helvetica-Bold", 16)
+    p.setFillColor(colors.darkblue)
+    p.drawCentredString(300, 770, "Reporte de Entrevistador")
+
+    # Volver al tamaño de fuente normal
+    p.setFont("Helvetica", 12)
+    p.setFillColor(colors.black)
+
+    # Datos del entrevistador
+    p.drawString(100, 720, f"ID: {entrevistador.id}")
+    p.drawString(100, 700, f"Empresa: {entrevistador.empresa or 'N/A'}")
+    p.drawString(100, 680, f"Fecha de entrevista: {entrevistador.fecha_entrevista or 'N/A'}")
+    p.drawString(100, 660, f"Conectado: {'Sí' if entrevistador.conectado else 'No'}")
+    p.drawString(100, 640, f"Seleccionado: {'Sí' if entrevistador.seleccionado else 'No'}")
+    p.drawString(100, 620, f"Usuario: {entrevistador.user.username if entrevistador.user else 'N/A'}")
+
+    # Añadir avatar si existe
+    if entrevistador.avatar and os.path.exists(entrevistador.avatar.path):
+        p.drawImage(entrevistador.avatar.path, 100, 500, width=100, height=100)
+
+    # Guardar el PDF
+    p.showPage()
+    p.save()
+
+    return response
+
+
+# Vista para agregar un curriculum
+def agregar_curriculum(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        ap1 = request.POST.get('ap1')
+        ap2 = request.POST.get('ap2')
+        email = request.POST.get('email')
+        telefono = request.POST.get('telefono')
+
+        curriculum = Curriculum(nombre=nombre, ap1=ap1, ap2=ap2, email=email, telefono=telefono)
+        curriculum.save()
+
+        return redirect('ver_curriculum', pk=curriculum.pk)
+    return render(request, 'agregar_curriculum.html')
+
+
+# Controlador para ver el curriculum
+def ver_curriculum(request, pk):
+    curriculum = get_object_or_404(Curriculum, pk=pk)
+    estudios = DetalleCurriculumEstudio.objects.filter(curriculum=curriculum)
+    experiencias = DetalleCurriculumExperiencia.objects.filter(curriculum=curriculum)
+    context = {'curriculum': curriculum, 'estudios': estudios, 'experiencias': experiencias}
+    return render(request, 'ver_curriculum.html', context=context)
+
+
+# Controlador para generar el PDF del curriculum
+def generar_pdf(request, entrevistador_id):
+    curriculum = get_object_or_404(Curriculum, id=entrevistador_id)
+    estudios = DetalleCurriculumEstudio.objects.filter(curriculum=curriculum)
+    experiencias = DetalleCurriculumExperiencia.objects.filter(curriculum=curriculum)
+
+    # Crear la respuesta HttpResponse con el tipo contenido PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="curriculum_{curriculum.nombre}_{curriculum.ap1}.pdf"'
+
+    # Crear un objeto canvas de ReportLab para generar el PDF
+    c = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    # Cargar imagen de avatar
+    avatar_path = os.path.join(settings.MEDIA_ROOT, "MEDIA/moneda3.jpg")
+    if os.path.exists(avatar_path):
+        avatar = ImageReader(avatar_path)
+        c.drawImage(avatar, width - 150, height - 150, width=100, height=100)
+
+    # Título del curriculum en color
+    c.setFont("Helvetica-Bold", 20)
+    c.setFillColor(colors.HexColor("#4B8BBE"))
+    c.drawString(100, height - 100, f"Curriculum de {curriculum.nombre} {curriculum.ap1}")
+
+    # Información de contacto en color diferente
+    c.setFont("Helvetica", 12)
+    c.setFillColor(colors.HexColor("#306998"))
+    c.drawString(100, height - 130, f"Email: {curriculum.email}")
+    c.drawString(100, height - 150, f"Teléfono: {curriculum.telefono}")
+
+    # Sección de estudios en otro color
+    y_position = height - 200
+    c.setFont("Helvetica-Bold", 14)
+    c.setFillColor(colors.HexColor("#FFDD43"))
+    c.drawString(100, y_position, "Estudios:")
+
+    # Mostrar cada estudio con detalles
+    c.setFont("Helvetica", 12)
+    y_position -= 20
+    for estudio in estudios:
+        if y_position < 100:
+            c.showPage()
+            y_position = height - 100
+        c.setFillColor(colors.black)
+        c.drawString(100, y_position, f"{estudio.estudio.nombre} ({estudio.estudio.fecha_inicio} - {estudio.estudio.fecha_fin})")
+        y_position -= 20
+
+    # Sección de experiencia laboral
+    y_position -= 40
+    c.setFont("Helvetica-Bold", 14)
+    c.setFillColor(colors.HexColor("#306998"))
+    c.drawString(100, y_position, "Experiencia laboral:")
+    y_position -= 20
+    c.setFont("Helvetica", 12)
+    for experiencia in experiencias:
+        if y_position < 100:
+            c.showPage()
+            y_position = height - 100
+        c.setFillColor(colors.black)
+        c.drawString(100, y_position, f"{experiencia.experiencia.empresa} ({experiencia.experiencia.fecha_inicio} - {experiencia.experiencia.fecha_fin})")
+        y_position -= 20
+
+    # Finalizar el PDF
+    c.showPage()
+    c.save()
+
+    return response
+
+
+# Vista para ver las noticias
+def lista_noticias(request):
+    noticias = Noticia.objects.all().order_by('-fecha_creacion')
+    return render(request, 'lista_noticias.html', {'noticias': noticias})
+
+
+# Vista para crear una nueva noticia
+def crear_noticia(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        contenido = request.POST.get('contenido')
+        imagen = request.FILES.get('imagen')
+
+        if titulo and contenido:
+            noticia = Noticia.objects.create(titulo=titulo, contenido=contenido, imagen=imagen)
+            return redirect('lista_noticias')
+        else:
+            return HttpResponse("Error: el título y el contenido son obligatorios.", status=400)
+
+    return render(request, 'crear_noticia.html')
+
+def listar_valoraciones(request):
+    valoraciones = Valoracion.objects.all()
+    return render(request, 'list.html', {'valoraciones': valoraciones})
+
+
+def actualizar_valoracion(request, pk):
+    valoracion = get_object_or_404(Valoracion, pk=pk)
+    if request.method == "POST":
+        votos_entrevista = int(
+            request.POST.get("votos_entrevista", valoracion.votos_entrevista)
+        )
+        votos_empresa = int(
+            request.POST.get("votos_empresa", valoracion.votos_empresa)
+        )
+        # Actualizar los votos y recalcular la media
+        valoracion.votos_entrevista = votos_entrevista
+        valoracion.votos_empresa = votos_empresa
+        valoracion.media_aspectos = (votos_entrevista + votos_empresa) / 2
+        valoracion.save()
+        return redirect('listar_valoraciones')
+
+    return render(request, 'update.html', {'valoracion': valoracion})
+
+def añadir_valoracion(request):
+    if request.method == 'POST':
+        # Obtener datos del formulario
+        entrevista = request.POST.get('entrevista')
+        empresa = request.POST.get('empresa')
+        votos_entrevista = int(request.POST.get('votos_entrevista', 0))
+        votos_empresa = int(request.POST.get('votos_empresa', 0))
+
+        # Calcular la media de los aspectos
+        media_aspectos = (votos_entrevista + votos_empresa) / 2
+
+        # Crear y guardar la nueva valoración
+        Valoracion.objects.create(
+            entrevista=entrevista,
+            empresa=empresa,
+            votos_entrevista=votos_entrevista,
+            votos_empresa=votos_empresa,
+            media_aspectos=media_aspectos
+        )
+
+        return redirect('listar_valoraciones')
+
+    return render(request, 'add.html')

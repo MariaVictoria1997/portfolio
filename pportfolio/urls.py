@@ -11,6 +11,17 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 # servicio de ficheros estáticos durante el servidor
 from django.views.static import serve
+from appportfolio.models import *
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+import os
+from django.urls import path
+from appportfolio import views
+from django.urls import path
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # este redirige al admin
@@ -33,10 +44,19 @@ urlpatterns = [
     path('subir_imagenes/', subir_imagenes, name='subir_imagenes'),
     path('imagen/editar/<int:imagen_id>/', views.editar_imagen, name='editar_imagen'),
     path('imagen/eliminar/<int:imagen_id>/', views.eliminar_imagen, name='eliminar_imagen'),
-    path('subir_videos/', subir_videos, name='subir_videos'),
+    path('subir_videos/', views.subir_videos, name='subir_videos'),
     path('video/editar/<int:video_id>/', views.editar_video, name='editar_video'),
     path('video/eliminar/<int:video_id>/', views.eliminar_video, name='eliminar_video'),
     path('contacto/', views.contacto, name='contacto'),
+    path('listar_entrevistadores/', views.listar_entrevistadores, name='listar_entrevistadores'),
+    path('agregar/', views.agregar_curriculum, name='agregar_curriculum'),
+    path('ver/<int:pk>/', views.ver_curriculum, name='ver_curriculum'),
+    path('generar_pdf/<int:entrevistador_id>/', generar_pdf, name='generar_pdf'),
+    path('lista_noticias/', views.lista_noticias, name='lista_noticias'),
+    path('crear_noticia/', views.crear_noticia, name='crear_noticia'),
+    path("listar_valoraciones/", views.listar_valoraciones, name="listar_valoraciones"),
+    path("actualizar_valoracion/<int:pk>/edit/", views.actualizar_valoracion, name="actualizar_valoracion"),
+    path("añadir_valoracion/add/", views.añadir_valoracion, name="añadir_valoracion"),
     # pk <int:pk> es tipo de dato y r'^(?P<id>\d+) es expresion regular
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
@@ -46,5 +66,6 @@ urlpatterns += [
         'document_root': settings.MEDIA_ROOT,
     })
 ]
+
 
 

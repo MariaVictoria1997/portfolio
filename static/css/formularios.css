@@ -1,0 +1,257 @@
+/* Estilo global */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+/* Contenedor principal */
+.container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+/* Título */
+h1, h2 {
+    color: #333;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Formulario */
+form {
+    background-color: #fff8e1; /* Amarillo suave para el fondo del formulario */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Estilo para las etiquetas del formulario */
+form label {
+    color: #f39c12; /* Amarillo dorado para las etiquetas */
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Estilo para los inputs de texto en el formulario */
+form input[type="text"], form input[type="radio"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #f39c12; /* Borde amarillo dorado */
+    border-radius: 4px;
+    background-color: #fef7d9; /* Amarillo claro */
+    font-size: 16px;
+    color: #333;
+}
+
+/* Estilo para las estrellas */
+.stars {
+    display: flex; /* Usamos flexbox para alinear las estrellas horizontalmente */
+    justify-content: center; /* Centra las estrellas */
+    gap: 8px; /* Espacio entre cada estrella */
+    margin-bottom: 20px;
+}
+
+.stars input[type="radio"] {
+    display: none; /* Ocultamos los botones de radio */
+}
+
+/* Estilos para las imágenes de las estrellas */
+.stars label {
+    font-size: 32px; /* Tamaño de las estrellas */
+    color: #f39c12; /* Color de las estrellas amarillas */
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.stars label:hover {
+    transform: scale(1.2); /* Agrandar la estrella al pasar el ratón */
+}
+
+.stars input[type="radio"]:checked ~ label {
+    color: #f1c40f; /* Amarillo más fuerte cuando está seleccionada */
+}
+
+/* Botón del formulario */
+form button[type="submit"] {
+    background-color: #f39c12; /* Amarillo dorado */
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+form button[type="submit"]:hover {
+    background-color: #f1c40f; /* Amarillo más fuerte al pasar el ratón */
+}
+
+/* Tabla con estilo compatible con Bootstrap */
+.table {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #fff8e1; /* Amarillo suave */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #f39c12; /* Amarillo dorado para la cabecera */
+    color: white;
+    text-align: center;
+    padding: 12px;
+}
+
+.table tbody td {
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+    color: #495057;
+    transition: background-color 0.3s;
+}
+
+.table tbody tr:hover {
+    background-color: #f2f2f2;
+}
+
+/* Estilo para los enlaces dentro de la tabla */
+table a {
+    background-color: #f39c12; /* Amarillo dorado */
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+table a:hover {
+    background-color: #f1c40f; /* Amarillo más fuerte al pasar el ratón */
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .active a {
+    background-color: #007bff !important;
+    color: white !important;
+    border-radius: 4px;
+}
+
+/* Compatibilidad adicional para Bootstrap */
+.galeria .imagen .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.galeria .imagen .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Mantener el estilo de los votos en el formulario sin cambios */
+.rating input[type="radio"] {
+    display: none;
+}
+
+.rating label {
+    color: #f39c12;
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.rating input[type="radio"]:checked ~ label {
+    color: #f1c40f; /* Amarillo más fuerte para la estrella seleccionada */
+}
+
+.rating input[type="radio"]:hover ~ label {
+    color: #f1c40f; /* Amarillo más fuerte en hover */
+}
+
+.rating label:hover {
+    color: #f1c40f; /* Amarillo más fuerte cuando se pasa el ratón */
+}
+/* Estilos para la tabla de valoraciones */
+table {
+    width: 100%;
+    margin: 20px auto;
+    background-color: #fff8e1; /* Amarillo suave para el fondo de la tabla */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+thead {
+    background-color: #f39c12; /* Amarillo dorado para la cabecera */
+    color: white;
+}
+
+tbody tr:hover {
+    background-color: #f2f2f2; /* Fondo gris claro al pasar el ratón */
+}
+
+/* Estilo de los enlaces dentro de la tabla (por ejemplo, "Editar") */
+table td a {
+    background-color: #f39c12; /* Amarillo dorado */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+table td a:hover {
+    background-color: #f1c40f; /* Amarillo más fuerte al hacer hover */
+}
+
+/* Opcional: Puedes añadir más estilo para hacer que las filas de la tabla se vean más atractivas */
+tbody tr:nth-child(odd) {
+    background-color: #fff5e1; /* Amarillo muy suave para las filas impares */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fff8e1; /* Amarillo suave para las filas pares */
+}
+
+/* Si se usan botones para las acciones de la tabla */
+table .btn {
+    background-color: #f39c12;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+table .btn:hover {
+    background-color: #f1c40f; /* Amarillo más fuerte al hacer hover */
+}
+
+/* Estilo para la tabla sin bordes innecesarios */
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+/* Resaltar las celdas de la tabla con los valores importantes */
+th {
+    font-weight: bold;
+    font-size: 16px;
+}

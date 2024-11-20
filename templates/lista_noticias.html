@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{# {% load staticfiles %} #}
+{% load static %}
+
+{% block head %}
+<title>Networking</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+ {% endblock %}
+
+ {% block content %}
+ <br><br><br>
+  <div class="container mt-4">
+    <h1>Listar Noticias</h1>
+    <a href="{% url 'crear_noticia' %}" class="btn btn-primary mb-4">Crear nueva noticia</a>
+    <ul class="lost-group">
+      {% for noticia in noticias %}
+      <li class="list-group-item">
+        <h4>{{ noticia.titulo }}</h4>
+        <p>{{ noticia.contenido }}</p>
+        <small class="text-muted">Publicado el {{ noticia.fecha_creacion|date:"d M Y H:1" }}</small>
+        {% if noticia.imagen %}
+        <img src="{{ noticia.imagen.url }}" alt="Imagen de {{ noticia.titulo }}" style="max-width: 200pc; max-heigth: 200px;">
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+ {% endblock content %}
