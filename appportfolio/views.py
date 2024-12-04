@@ -20,8 +20,25 @@ from appportfolio.models import * #importamos el modelo de todos
 from appportfolio.models import Entrevistador, Curriculum, DetalleCurriculumEstudio, DetalleCurriculumExperiencia, Estudio
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Valoracion
-# Create your views here.
+#para el chat
+from django.http import JsonResponse
+#para que funcionen los decorados
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+#para tareas
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Tarea, Estado
+from django.http import HttpResponse
+from django.utils.timezone import now
+from django.shortcuts import render, redirect
+from .forms import TareaForm
 
+
+
+# Create your views here.
+################################################
+# HOME
+################################################
 def home(request):
     print('Hola estoy en home')
     nombre ='vicky'
@@ -52,7 +69,9 @@ def home(request):
     usuario = 'prueba'
     context = {'nombre':nombre,'ip':ip}
     return render(request, 'home.html', context=context)
-
+################################################
+# HABILIDADES
+################################################
 def habilidades(request):
     print('Hola estoy en habilidades')
     # select * from Habilidad order by habilidad desc| Habilidad: es la tabla, se coge el mismo nombre que en el modelo
@@ -68,7 +87,16 @@ def ver_habilidad(request, id):
     context = {'habilidad': habilidad}
     return render(request, 'ver_habilidad.html',context=context)
 
+def editar_habilidad(request, pk):
+    habilidad = get_object_or_404(Habilidad, pk=pk)
+    if request.method == 'POST':
+        habilidad.habilidad = request.POST.get('habilidad')
+        habilidad.nivel = request.POST.get('nivel')
+        habilidad.comentario = request.POST.get('comentario')
+        habilidad.save()
+        return redirect('habilidades')
 
+    return render(request, 'editar_habilidad.html', {'habilidad': habilidad})
 def eliminar_habilidad(request, pk):
     print("ELIMINAR")
     hab_id = pk
@@ -79,7 +107,9 @@ def eliminar_habilidad(request, pk):
         return redirect('habilidades')  # Aquí, asegúrate de que el nombre de la vista sea correcto
 
     return render(request, 'eliminar_habilidad.html', {'habilidad': habilidad})
-
+################################################
+# SOBRE MI
+################################################
 def sobremi(request):
     print('Hola estoy en sobremi')
     nombre = 'vicky'
@@ -94,7 +124,9 @@ def sobremi(request):
     context = {'nombre': nombre,'edad':edad,'telefono':telefono,'cargo':cargo,'listarCategorias':listarCategorias}
     return render(request, 'sobremi.html', context=context)
 
-
+################################################
+# ESTUDIOS
+################################################
 def estudios(request):
     # Obtener todos los registros de la tabla 'Estudio', ordenados por el campo 'id' de forma descendente
     estudios_list = Estudio.objects.all().order_by('-id')
@@ -114,6 +146,33 @@ def estudios(request):
     # Renderizar el template 'estudios.html' con el contexto
     return render(request, 'estudios.html', context=context)
 
+def ver_estudio(request, id):
+    estudio = get_object_or_404(Estudio, id=id)
+    return render(request, 'ver_estudios.html', {'estudio': estudio})
+
+def editar_estudio(request, id):
+    estudio = get_object_or_404(Estudio, id=id)
+    if request.method == 'POST':
+        estudio.titulacion = request.POST.get('titulacion')
+        estudio.fechaInicio = request.POST.get('fechaInicio')
+        estudio.fechaFin = request.POST.get('fechaFin')
+        estudio.notaMedia = request.POST.get('notaMedia')
+        estudio.lugarEstudio = request.POST.get('lugarEstudio')
+        estudio.nombreLugar = request.POST.get('nombreLugar')
+        estudio.ciudad = request.POST.get('ciudad')
+        estudio.presencial = request.POST.get('presencial') == 'on'
+        estudio.observaciones = request.POST.get('observaciones')
+        estudio.save()
+        return redirect('estudios')
+    return render(request, 'editar_estudio.html', {'estudio': estudio})
+
+def eliminar_estudio(request, id):
+    estudio = get_object_or_404(Estudio, id=id)
+    estudio.delete()
+    return redirect('estudios')
+################################################
+# EXPERIENCIA
+################################################
 def experiencia(request):
     # Obtener todos los registros de la tabla 'Estudio', ordenados por el campo 'id' de forma descendente
     experiencia_list = Experiencia.objects.all().order_by('-id')
@@ -139,17 +198,15 @@ def ver_experiencia(request,id):
     context = {'experiencia': experiencia}
     return render(request, 'ver_experiencia.html',context=context)
 
-def eliminarExperiencia(request,pk):
-    print("ELIMINAR")
-    #Creamos variables
-    expe_id=pk
-    experiencia = Experiencia.objects.get(id=expe_id) #es registro No query set
-    #si es un post es que llega, si es un get es que sale de una accion
+def eliminarExperiencia(request, pk):
+    experiencia = get_object_or_404(Experiencia, pk=pk)
     if request.method == 'POST':
         experiencia.delete()
-        return redirect('experiencia')
-    return render(request, 'eliminar_experiencia.html', {'experiencia':experiencia})
-
+        return redirect('experiencia')  # Asegúrate de que el nombre coincide con la vista de la lista.
+    return render(request, 'eliminar_experiencia.html', {'experiencia': experiencia})
+################################################
+# PERSONA
+################################################
 def crear_persona(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -174,7 +231,9 @@ def editar_persona(request, persona_id):
         persona.save()
         return redirect('lista_personas') #Redirige a la lista de personas o a otra pagina
         return render(request, 'editar_persona.html', {'persona':persona})
-
+################################################
+# LOGIN
+################################################
 def login_view(request):
     if request.method =='POST':
         username = request.POST['username']
@@ -186,7 +245,9 @@ def login_view(request):
         else:
             return render(request, 'login.html', {'error': 'Credenciales inválidas'})
     return render(request, 'login.html')
-
+################################################
+# REGISTRAR
+################################################
 def register_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -196,6 +257,9 @@ def register_view(request):
         return redirect('login') #redirige al login una vez registrado
     return render(request, 'register.html')
 
+################################################
+# CERRAR SESION
+################################################
 #Cerrar la sesion del usuario
 def cerrar(request):
     username = request.user.username
@@ -206,7 +270,9 @@ def cerrar(request):
     #desconectamos al usuario
     logout(request)
     return redirect('/')
-
+################################################
+# IMAGEN
+################################################
 def subir_imagenes(request):
     idUsuario = request.session['idusuario']
     if request.method == 'POST':
@@ -221,12 +287,14 @@ def subir_imagenes(request):
         return redirect('subir_imagenes')
     imagenes = Imagen.objects.all()
     return render(request, 'subir_imagenes.html', {'imagenes': imagenes})
+
 def eliminar_imagen(request, imagen_id):
     imagen = get_object_or_404(Imagen, id=imagen_id)
     if request.method == 'POST':
         imagen.delete()
         return redirect('subir_imagenes') #redirige a la galería de imagenes
     return redirect('subir_imagenes') #redirige a la galeria de imagenes
+
 def editar_imagen(request, imagen_id):
     imagen = get_object_or_404(Imagen, id=imagen_id)
     if request.method =='POST' and request.FILES.get('nueva_imagen'):
@@ -235,9 +303,11 @@ def editar_imagen(request, imagen_id):
         imagen.save()
         return redirect('subir_imagenes') #Redirige a la galeria de imagenes
     return redirect('subir_imagenes')
-
+################################################
+# VIDEOS
+################################################
 def subir_videos(request):
-    if request.method == 'POST' and request.FILES['videos']:
+    if request.method == 'POST':
         videos = request.FILES.getlist('videos')
 
         for video in  videos:
@@ -247,22 +317,26 @@ def subir_videos(request):
                 v.save()
         return redirect('subir_videos')
     videos = Video.objects.all()
-    context = {'videos': videos}
-    return render(request, 'subir_videos.html', context=context)
+    return render(request, 'subir_videos.html', {'videos': videos})
+
 def eliminar_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     if request.method == 'POST':
         video.delete()
         return redirect('subir_videos')
     return redirect('subir_videos')
+
 def editar_video(request, video_id):
+    print("entra"+str(video_id))
     video = get_object_or_404(Video, id=video_id)
     if request.method =='POST' and request.FILES.get('nuevo_video'):
         #Actualizamos el video
         video.video == request.FILES['nuevo_video']
+        print("entra" + str(video.video)).
         video.save()
         return redirect('subir_videos') #Redirige a la galeria de imagenes
     return redirect('subir_videos')
+
 def login_view(request):
     print("Logi_view")
     if request.method == 'POST':
@@ -288,7 +362,9 @@ def login_view(request):
         else:
             return render(request, 'login.html',{'error': 'Credenciales inválidas'})
     return render(request, 'login.html')
-
+################################################
+# MAIL
+################################################
 def contacto(request):
     if request.method == "POST":
         nombre = request.POST.get('nombre')
@@ -305,9 +381,11 @@ def contacto(request):
         email.send()
 
         messages.success(request, 'Se ha enviado tu email')
-        return redirect('home')
+        return redirect('contacto')
     return render(request, 'correo.html')
-
+################################################
+# ENTREVISTADOR
+################################################
 def listar_entrevistadores(request):
     entrevistadores = Entrevistador.objects.all()
     return render(request, 'listar_entrevistadores.html', {'entrevistadores':entrevistadores})
@@ -350,26 +428,32 @@ def generar_pdf_entrevistador(request, entrevistador_id):
 
     return response
 
-
+################################################
+# CURRICULUM
+################################################
 # Vista para agregar un curriculum
 def agregar_curriculum(request):
+    personal = Personal.objects.get(id=1)
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        ap1 = request.POST.get('ap1')
-        ap2 = request.POST.get('ap2')
+        #nombre = request.POST.get('nombre') cajita
+        #ap1 = request.POST.get('ap1')
+        #ap2 = request.POST.get('ap2')
+        nombre=personal.nombre #interno del id
+        ap1=personal.apellido1
+        ap2=personal.apellido2
         email = request.POST.get('email')
         telefono = request.POST.get('telefono')
 
         curriculum = Curriculum(nombre=nombre, ap1=ap1, ap2=ap2, email=email, telefono=telefono)
         curriculum.save()
 
-        return redirect('ver_curriculum', pk=curriculum.pk)
+        return redirect('ver_curriculum', id=personal.id)
     return render(request, 'agregar_curriculum.html')
 
 
 # Controlador para ver el curriculum
-def ver_curriculum(request, pk):
-    curriculum = get_object_or_404(Curriculum, pk=pk)
+def ver_curriculum(request, id):
+    curriculum = get_object_or_404(Curriculum, id=id)
     estudios = DetalleCurriculumEstudio.objects.filter(curriculum=curriculum)
     experiencias = DetalleCurriculumExperiencia.objects.filter(curriculum=curriculum)
     context = {'curriculum': curriculum, 'estudios': estudios, 'experiencias': experiencias}
@@ -421,7 +505,7 @@ def generar_pdf(request, entrevistador_id):
             c.showPage()
             y_position = height - 100
         c.setFillColor(colors.black)
-        c.drawString(100, y_position, f"{estudio.estudio.nombre} ({estudio.estudio.fecha_inicio} - {estudio.estudio.fecha_fin})")
+        c.drawString(100, y_position, f"{estudio.estudio.titulacion} ({estudio.estudio.fechaInicio} - {estudio.estudio.fechaFin})")
         y_position -= 20
 
     # Sección de experiencia laboral
@@ -445,7 +529,9 @@ def generar_pdf(request, entrevistador_id):
 
     return response
 
-
+################################################
+# NOTICIAS
+################################################
 # Vista para ver las noticias
 def lista_noticias(request):
     noticias = Noticia.objects.all().order_by('-fecha_creacion')
@@ -466,7 +552,9 @@ def crear_noticia(request):
             return HttpResponse("Error: el título y el contenido son obligatorios.", status=400)
 
     return render(request, 'crear_noticia.html')
-
+################################################
+# VALORACIONES
+################################################
 def listar_valoraciones(request):
     valoraciones = Valoracion.objects.all()
     return render(request, 'list.html', {'valoraciones': valoraciones})
@@ -513,3 +601,127 @@ def añadir_valoracion(request):
         return redirect('listar_valoraciones')
 
     return render(request, 'add.html')
+################################################
+# CHAT
+################################################
+#Seleccionar entrevistador chat
+@login_required
+def seleccionar_entrevistadores(request):
+    entrevistadores = Entrevistador.objects.all()
+    # Si el usuario está enviando un formulario, redirigir al chat con el entrevistador seleccionado
+    if request.method == 'POST':
+        entrevistador_id = request.POST.get('entrevistador_id')
+        return redirect('chat_view', entrevistador_id=entrevistador_id)
+    return render(request, 'seleccionar_entrevistador.html', {'entrevistadores': entrevistadores})
+#ayuda a que los usuarios estén logeados por fuerta @login_required
+@login_required
+def chat_view(request, entrevistador_id):
+    entrevistador = get_object_or_404(Entrevistador, id=entrevistador_id) #es como un select
+    mensajes = Mensaje.objects.filter( #la funcion Q sirve para que pueda hacer multiples condiciones
+        (models.Q(remitente=request.user) & models.Q(destinatario=entrevistador.user)) |
+         (models.Q(remitente=entrevistador.user) & models.Q(destinatario=request.user))
+    )
+    #Agregar la propiedad 'clase' para usarla en el template
+    for mensaje in mensajes:
+        mensaje.clase = 'enviado' if mensaje.remitente == request.user else 'recibido'
+    # Renderizar solo el chat para la respuesta AJAX
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'mensajesHtml': render_to_string('chat_mensajes.html', {'mensajes':mensajes}),
+        })
+    return render(request,'chat.html', {'entrevistador':entrevistador, 'mensajes':mensajes})
+
+@login_required
+def enviar_mensaje(request):
+    if request.method == 'POST':
+        contenido = request.POST.get('contenido')
+        destinatario_id = request.POST.get('destinatario_id')
+        destinatario = get_object_or_404(User, id=destinatario_id)
+        print(f"Contenido: {contenido}, Destinatario ID: {destinatario_id}")
+        mensaje = Mensaje.objects.create(
+            remitente = request.user,
+            destinatario=destinatario,
+            contenido=contenido
+        )
+        return JsonResponse({'status': 'success', 'mensaje': mensaje.contenido, 'fecha_envio': mensaje.fecha_envio})
+    return JsonResponse({'status': 'error', 'message': 'Metodo no permitido'})
+
+################################################
+# TREAS
+################################################
+@login_required
+def listar_tareas(request):
+    tareas = Tarea.objects.all()  # Obtén todas las tareas de la base de datos
+    return render(request, 'listar_tareas.html', {'tareas': tareas})
+
+@login_required
+def crear_tarea(request):
+    if request.method == 'POST':
+        tarea_nombre = request.POST.get('tarea')
+        fecha = request.POST.get('fecha')
+        estado_id = request.POST.get('estado')
+
+        # Obtener el estado correspondiente
+        estado = Estado.objects.get(id=estado_id)
+
+        # Crear la tarea y guardarla en la base de datos
+        tarea = Tarea(tarea=tarea_nombre, fecha=fecha, estado=estado)
+        tarea.save()
+
+        # Redirigir a la lista de tareas
+        return redirect('listar_tareas')
+
+    else:
+        estados = Estado.objects.all()  # Obtenemos todos los estados para el formulario
+        return render(request, 'crear_tarea.html', {'estados': estados})
+
+@login_required
+def editar_tarea(request, id):
+    tarea = get_object_or_404(Tarea, id=id)
+
+    if request.method == 'POST':
+        tarea.tarea = request.POST.get('tarea')
+        tarea.fecha = request.POST.get('fecha')
+        tarea.estado = Estado.objects.get(id=request.POST.get('estado'))  # Actualizar el estado
+        tarea.save()
+
+        return redirect('listar_tareas')  # Redirigir a la lista de tareas
+
+    # Si es un GET, mostrar el formulario con los datos actuales
+    estados = Estado.objects.all()
+    return render(request, 'editar_tarea.html', {'tarea': tarea, 'estados': estados})
+
+@login_required
+def eliminar_tarea(request, id):
+    tarea = get_object_or_404(Tarea, id=id)
+    tarea.delete()  # Elimina la tarea de la base de datos
+    return redirect('listar_tareas')  # Redirigir a la lista de tareas
+################################################
+# CALIFICACIONES
+################################################
+def lista_calificaciones(request):
+    calificaciones = Calificacion.objects.all().order_by('-nota')
+    Totmedia = 0
+    i = 0
+
+    for media in calificaciones:
+        Totmedia += media.nota
+        i += 1
+
+    # Calcula el promedio solo si hay calificaciones
+    promedio = Totmedia / i if i > 0 else None
+
+    context = {
+        'calificaciones': calificaciones,
+        'promedio': promedio
+    }
+    return render(request, 'lista_calificaciones.html', context=context)
+
+def añadir_calificacion(request):
+    if request.method == 'POST':
+        asignatura = request.POST.get('asignatura')
+        nota = request.POST.get('nota')
+        if asignatura and nota:
+            Calificacion.objects.create(asignatura=asignatura, nota=nota)
+        return redirect('lista_calificaciones')  # Asegúrate de que redirige aquí
+    return render(request, 'agregar_calificacion.html')

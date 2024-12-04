@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Estudios Obtenidos</title>
+    <link rel="stylesheet" href="{% static 'css/css.css' %}"> <!-- Vincula tu CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+{% endblock head %}
+{% block content %}
+<div class="container">
+    <h2>Detalle del Estudio</h2>
+    <ul>
+    <h1>Detalles del Estudio</h1>
+    <p>Titulación: {{ estudio.titulacion }}</p>
+    <p>Fecha de Inicio: {{ estudio.fechaInicio }}</p>
+    <p>Fecha de Fin: {{ estudio.fechaFin }}</p>
+    <p>Nota Media: {{ estudio.notaMedia }}</p>
+    <p>Observaciones: {{ estudio.observaciones }}</p>
+    </ul>
+    <a class="btn btn-primary" href="{% url 'estudios' %}">Volver</a>
+</div>
+{% endblock content %}

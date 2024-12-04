@@ -51,7 +51,7 @@
                 <td><a class='btn btn-danger btn-sm' href="{% url 'eliminar_habilidad' pk=r.id %}">ANULAR</a></td>
 
                 <!-- Enlace a la vista de edición (puedes cambiar 'home' si es necesario) -->
-                <td><a class='btn btn-success btn-sm' href="{% url 'home' %}">EDITAR</a></td>
+                <td><a class='btn btn-success btn-sm' href="{% url 'editar_habilidad' pk=r.id %}">EDITAR</a></td>
             </form>
             <td> {{ r.categoria}} </td><
           </tr>

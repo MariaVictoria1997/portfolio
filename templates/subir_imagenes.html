@@ -86,7 +86,7 @@
     //oculta todos los formularios de edicion para evitar duplicados visibles
     document.querySelectorAll('[id^="form-editar-"]').forEach(form => form.style.display='none');
     //muestra el forumalrio correspondiente a la imagen seleccionada
-    document.getElementById('form.editar-' + imagenId).style.display = 'block';
+    document.getElementById('form-editar-' + imagenId).style.display = 'block';
     }
 </script>
 {% endblock %}

@@ -1,0 +1,69 @@
+/* Fondo y color de texto para los enlaces */
+.navbar-inverse .navbar-nav > li > a {
+    color: #0000FF !important;
+    font-size: 10px !important; /* Tamaño de letra más pequeño */
+    text-decoration: none !important;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    background-color: #E6F3F8 !important;
+    color: #0000FF !important;
+    font-size: 10px !important; /* Aseguramos consistencia en hover */
+}
+
+/* Mantener color al hacer clic en el desplegable */
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .navbar-nav > li > a:active {
+    background-color: transparent !important; /* Evita cambio de fondo */
+    color: #0000FF !important; /* Mantiene el color azul */
+}
+
+/* Estilo para los elementos desplegables */
+.navbar-inverse .navbar-nav .dropdown-menu > li > a {
+    color: #0000FF !important;
+    background-color: #FFFFFF !important;
+    font-size: 10px !important; /* Tamaño reducido en dropdown */
+}
+
+.navbar-inverse .navbar-nav .dropdown-menu > li > a:hover {
+    background-color: #E6F3F8 !important;
+    color: #0000FF !important;
+    font-size: 8px !important;
+}
+
+/* Mantener color al hacer clic en el menú desplegable */
+.navbar-inverse .navbar-nav .dropdown-menu > li > a:focus,
+.navbar-inverse .navbar-nav .dropdown-menu > li > a:active {
+    background-color: transparent !important;
+    color: #0000FF !important;
+}
+
+/* Botón de toggle del navbar */
+.navbar-inverse .navbar-toggle {
+    border-color: #B3B3B3 !important;
+    font-size: 10px !important;
+}
+
+/* Menú colapsado en pantallas pequeñas */
+.navbar-inverse .navbar-collapse {
+    background-color: #F7F9F9 !important;
+    font-size: 10px !important; /* Texto pequeño para pantallas pequeñas */
+}
+
+/* Cambiar tamaño del texto para el título */
+.navbar-brand {
+    font-size: 10px !important; /* Texto más pequeño para la marca */
+    color: #000000 !important;
+}
+
+/* Botón de registro/login */
+.navbar-nav .btn {
+    font-size: 10px !important; /* Ajuste en botones */
+}
+
+/* Mantener color al hacer clic en los botones */
+.navbar-nav .btn:focus,
+.navbar-nav .btn:active {
+    background-color: #2E9AFE !important; /* Fondo azul estándar */
+    color: #686868 !important; /* Texto gris oscuro */
+}

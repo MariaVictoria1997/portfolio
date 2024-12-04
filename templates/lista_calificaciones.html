@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{# {% load staticfiles %} #}
+{% load static %}
+
+{% block head %}
+<title>Tareas</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/tareas.css' %}">
+{% endblock %}
+{% block content %}
+ <h1>Lista de Calificaciones</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Asignatura</th>
+                <th>Nota</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for calificacion in calificaciones %}
+                <tr>
+                    <td>{{ calificacion.asignatura }}</td>
+                    <td>{{ calificacion.nota }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Nota media global: {{ promedio|default:"Sin calificaciones" }}</p>
+    <a href="{% url 'añadir_calificacion' %}">Agregar Calificacion</a>
+{% endblock %}

@@ -47,9 +47,8 @@
                         <td>{% if estudio.presencial %}Sí{% else %}No{% endif %}</td>
                         <td>{{ estudio.observaciones }}</td>
                         <td>
-                            <a class="btn btn-info btn-sm" href="{% url 'home' %}">Ver</a>
-                            <a class="btn btn-info btn-sm" href="{% url 'home' %}">Editar</a>
-                            <a class="btn btn-info btn-sm" href="{% url 'home' %}">Eliminar</a>
+                            <a class="btn btn-info btn-sm" href="{% url 'ver_estudios' estudio.id %}">Ver</a>
+                            <a class="btn btn-warning btn-sm" href="{% url 'editar_estudio' estudio.id %}">Editar</a>
                         </td>
                     </tr>
                 {% empty %}

@@ -64,14 +64,14 @@ admin.site.register(Curriculum, CurriculumAdmin)
 
 class DetalleCurriculumEstudioAdmin(admin.ModelAdmin):
     list_display = ['id', 'estudio', 'curriculum']
-    search_fields = ('id', 'estudio__nombre', 'curriculum__nombre')  # Acceso a campos relacionados
+    search_fields = ('id', 'estudio', 'curriculum')  # Acceso a campos relacionados
     list_filter = ('estudio', 'curriculum')
 
 admin.site.register(DetalleCurriculumEstudio, DetalleCurriculumEstudioAdmin)
 
 class DetalleCurriculumExperienciaAdmin(admin.ModelAdmin):
     list_display = ['id', 'experiencia', 'curriculum']
-    search_fields = ('id', 'experiencia__empresa', 'curriculum__nombre')  # Acceso a campos relacionados
+    search_fields = ('id', 'experiencia', 'curriculum')  # Acceso a campos relacionados
     list_filter = ('experiencia', 'curriculum')
 
 admin.site.register(DetalleCurriculumExperiencia, DetalleCurriculumExperienciaAdmin)
@@ -91,3 +91,11 @@ class ValoracionAdmin(admin.ModelAdmin):
         if obj.votos_entrevista and obj.votos_empresa:
             obj.media_aspectos = (obj.votos_entrevista + obj.votos_empresa) / 2
         super().save_model(request, obj, form, change)
+
+admin.site.register(Mensaje)
+
+
+@admin.register(Estado)
+class EstadoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'estado')  # Muestra id y estado en la lista
+    search_fields = ('estado',)  # Permite la búsqueda por estado

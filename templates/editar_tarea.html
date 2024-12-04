@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{# {% load staticfiles %} #}
+{% load static %}
+
+{% block head %}
+<title>Tareas</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/tareas.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Editar Tarea</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="tarea">Tarea</label>
+        <input type="text" class="form-control" id="tarea" name="tarea" value="{{ tarea.tarea }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="fecha">Fecha</label>
+        <input type="date" class="form-control" id="fecha" name="fecha" value="{{ tarea.fecha|date:'Y-m-d' }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="estado">Estado</label>
+        <select class="form-control" id="estado" name="estado" required>
+            {% for estado in estados %}
+                <option value="{{ estado.id }}" {% if estado == tarea.estado %}selected{% endif %}>
+                    {{ estado.get_estado_display }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+</form>
+{% endblock %}

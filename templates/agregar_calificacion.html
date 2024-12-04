@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{# {% load staticfiles %} #}
+{% load static %}
+
+{% block head %}
+<title>Tareas</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/tareas.css' %}">
+{% endblock %}
+{% block content %}
+<h1>Agregar Calificacion</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="asignatura">Asignatura:</label>
+        <input type="text" name="asignatura" id="asignatura" required><br>
+        <label for="nota">Nota:</label>
+        <input type="number" name="nota" id="nota" step="0.01" required><br>
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{% url 'lista_calificaciones' %}">Volver a la lista</a>
+{% endblock %}

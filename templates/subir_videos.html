@@ -56,7 +56,7 @@
                 <button type="button" class="btn btn-primary btn-sm" onclick="mostrarInput({{ video.id }})">Editar</button>
 
                 <!--formulario para editar video (oculto inicialmente) -->
-                 <form method="post" action="{% url 'editar_video' video.id %}" enctype="multipart/form-data"
+                 <form method="post" action="{% url 'editar_video' video_id=video.id %}" enctype="multipart/form-data"
                   style="display:none;" id="form-editar-{{ video.id }}">
                   {% csrf_token %}
                    <input type="file" name="nuevo_video" required>
@@ -93,7 +93,7 @@
     //oculta todos los formularios de edicion para evitar duplicados visibles
     document.querySelectorAll('[id^="form-editar-"]').forEach(form => form.style.display='none');
     //muestra el forumalrio correspondiente a la imagen seleccionada
-    document.getElementById('form.editar-' + videoId).style.display = 'block';
+    document.getElementById('form-editar-' + videoId).style.display = 'block';
     }
 </script>
 {% endblock %}

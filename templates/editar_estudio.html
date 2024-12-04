@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Estudios Obtenidos</title>
+    <link rel="stylesheet" href="{% static 'css/css.css' %}"> <!-- Vincula tu CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+{% endblock head %}
+{% block content %}
+<div class="container">
+    <h2>Editar Estudio</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>Titulación:</label>
+        <input type="text" name="titulacion" value="{{ estudio.titulacion }}" class="form-control" required><br>
+        <label>Fecha de Inicio:</label>
+        <input type="date" name="fechaInicio" value="{{ estudio.fechaInicio }}" class="form-control" required><br>
+        <label>Fecha de Fin:</label>
+        <input type="date" name="fechaFin" value="{{ estudio.fechaFin }}" class="form-control"><br>
+        <label>Nota Media:</label>
+        <input type="number" step="0.01" name="notaMedia" value="{{ estudio.notaMedia }}" class="form-control"><br>
+        <label>Lugar de Estudio:</label>
+        <input type="text" name="lugarEstudio" value="{{ estudio.lugarEstudio }}" class="form-control"><br>
+        <label>Nombre del Lugar:</label>
+        <input type="text" name="nombreLugar" value="{{ estudio.nombreLugar }}" class="form-control"><br>
+        <label>Ciudad:</label>
+        <input type="text" name="ciudad" value="{{ estudio.ciudad }}" class="form-control"><br>
+        <label>Presencial:</label>
+        <input type="checkbox" name="presencial" {% if estudio.presencial %}checked{% endif %}><br>
+        <label>Observaciones:</label>
+        <textarea name="observaciones" class="form-control">{{ estudio.observaciones }}</textarea><br>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <a class="btn btn-secondary" href="{% url 'estudios' %}">Cancelar</a>
+    </form>
+</div>
+{% endblock content %}

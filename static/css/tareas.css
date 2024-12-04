@@ -1,0 +1,135 @@
+/* Estilo para el fondo general */
+body {
+    background-color: #f4f9f4; /* Un fondo suave en verde claro */
+}
+
+/* Estilo para los encabezados */
+h1, h2, h3 {
+    color: #3e8e41; /* Verde oscuro para los títulos */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Estilo para el contenedor principal */
+.container {
+    background-color: #ffffff; /* Fondo blanco para el contenido */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin-top: 30px;
+}
+
+/* Estilo para los botones */
+.btn-primary {
+    background-color: #f7d600; /* Amarillo brillante */
+    border-color: #f7d600;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #f0c200; /* Amarillo más oscuro */
+    border-color: #f0c200;
+}
+
+/* Estilo para los botones de cancelación */
+.btn-secondary {
+    background-color: #8cc63f; /* Verde para los botones secundarios */
+    border-color: #8cc63f;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #76b737; /* Verde más oscuro */
+    border-color: #76b737;
+}
+
+/* Estilo de las tablas */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #e0e0e0; /* Borde ligero para la tabla */
+}
+
+table th {
+    background-color: #f7d600; /* Amarillo para los encabezados de la tabla */
+    color: #ffffff;
+}
+
+table td {
+    background-color: #ffffff;
+}
+
+table tr:nth-child(even) td {
+    background-color: #f2f2f2; /* Color gris suave para las filas pares */
+}
+
+/* Estilo para el formulario */
+form .form-group label {
+    color: #3e8e41; /* Verde para los textos del formulario */
+    font-weight: bold;
+}
+
+form .form-control {
+    border-radius: 5px;
+    border: 1px solid #d6d6d6;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+form .form-control:focus {
+    border-color: #8cc63f; /* Verde para los campos al enfocarse */
+    box-shadow: 0 0 5px rgba(140, 198, 63, 0.5);
+}
+
+/* Estilo para los mensajes de éxito (alertas) */
+.alert-success {
+    background-color: #8cc63f;
+    border-color: #76b737;
+    color: #ffffff;
+}
+
+.alert-success a {
+    color: #ffffff;
+}
+
+.alert-success .close {
+    color: #ffffff;
+}
+
+/* Estilo de los enlaces */
+a {
+    color: #8cc63f; /* Verde claro para enlaces */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #76b737; /* Verde oscuro para enlaces al pasar el mouse */
+}
+
+/* Estilo para los elementos centrados */
+.centered {
+    text-align: center;
+}
+
+.centered img {
+    max-width: 100%; /* Asegura que las imágenes no sobresalgan */
+    height: auto;
+}
+
+/* Estilo para las alertas de confirmación de eliminación */
+button[onclick] {
+    color: #ffffff;
+    background-color: #f7d600;
+    border-color: #f7d600;
+    padding: 8px 12px;
+}
+
+button[onclick]:hover {
+    background-color: #f0c200;
+    border-color: #f0c200;
+}

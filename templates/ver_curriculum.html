@@ -9,25 +9,29 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
  {% endblock %}
 
- {% block content %}
- <font size="3">
-     <h1>Curriculum de {{ curriculum.nombre}} {{ curriculum.ap1}} {{curriculum.ap2}}</h1>
-       <p>Email: {{ curriculum.email}}</p>
-       <p>Telefono: {{ curriculum.telefono }}</p>
+{% block content %}
 
-     <h2> Estudios</h2>
-       <ul>
-         {% for estudio in estudios %}
-         <li>{{ estudio.estudio.nombre }}: {{ estudio.estudio.descripcion }}</li>
-         {% endfor %}
-       </ul>
+<font size="3">
+curriculum = Curriculum()
+<br><br><br><br><br><br>
+<h1>Curriculum de {{ curriculum.nombre }} {{ curriculum.ap1 }} {{ curriculum.ap2 }}</h1>
+<p>Email: {{ curriculum.email }}</p>
+<p>Teléfono: {{ curriculum.telefono }}</p>
 
-     <h2>Experiencia</h2>
-        <ul>
-         {% for experiencia in experiencias %}
-         <li>{{ experiencia.experiencia.puesto }} en {{ experiencia.experiencia.empresa }}: {{ experiencia.experiencia.descripcion }}</li>
-         {% endfor %}
-       </ul>
-   <a href="{% url 'generar_pdf' entrevistador_id=curriculum.id %}">Generar PDF</a>
- </font>
- {% endblock content %}
+<h2>Estudios</h2>
+<ul>
+    {% for detalle in estudios %}
+        <li>{{ detalle.estudio.titulacion }} en {{ detalle.estudio.nombreLugar }} ({{ detalle.estudio.fechaInicio }} - {{ detalle.estudio.fechaFin }})</li>
+    {% endfor %}
+</ul>
+
+<h2>Experiencia</h2>
+<ul>
+    {% for detalle in experiencias %}
+        <li>{{ detalle.experiencia.empresa }}: {{ detalle.experiencia.observaciones }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'generar_pdf' curriculum.id %}">Generar PDF</a>
+</font>
+{% endblock %}
