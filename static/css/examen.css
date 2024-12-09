@@ -1,0 +1,70 @@
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table th {
+    background-color: #f9e68c; /* Amarillo suave */
+}
+
+/* Estilos para los botones (Editar y Eliminar) */
+.btn {
+    border-radius: 4px; /* Bordes redondeados */
+    padding: 5px 10px; /* Tamaño del botón */
+    font-size: 14px; /* Fuente del botón */
+    text-align: center;
+}
+
+/* Botón de editar (Amarillo) */
+.btn-edit {
+    background-color: #f7c74b; /* Amarillo cálido */
+    border: none;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #e4b240; /* Amarillo oscuro */
+}
+
+/* Botón de eliminar (Rojo) */
+.btn-delete {
+    background-color: #d9534f; /* Rojo Bootstrap */
+    border: none;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c9302c; /* Rojo más oscuro */
+}
+
+/* Ajustes de botones en el formulario */
+form .btn-sm {
+    font-size: 12px;
+    padding: 5px 10px;
+}
+
+form .btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+form .btn-group .btn {
+    margin: 0; /* Elimina márgenes entre botones */
+    padding: 8px 16px;
+}
+
+/* Alineación de los botones de editar y eliminar */
+form .btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+

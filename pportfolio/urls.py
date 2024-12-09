@@ -71,6 +71,11 @@ urlpatterns = [
     path('tareas/eliminar/<int:id>/', views.eliminar_tarea, name='eliminar_tarea'),
     path('lista_calificaciones/', views.lista_calificaciones, name='lista_calificaciones'),
     path('añadir/', views.añadir_calificacion, name='añadir_calificacion'),
+    path('lista_proyectos/', views.lista_proyectos, name='lista_proyectos'),
+    path('<int:proyecto_id>/', views.detalle_proyecto, name='detalle_proyecto'),
+    path('crear/', views.crear_proyecto, name='crear_proyecto'),
+    path('<int:proyecto_id>/editar/', views.editar_proyecto, name='editar_proyecto'),
+    path('<int:proyecto_id>/eliminar/', views.eliminar_proyecto, name='eliminar_proyecto'),
     # pk <int:pk> es tipo de dato y r'^(?P<id>\d+) es expresion regular
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

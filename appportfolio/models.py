@@ -326,3 +326,20 @@ class Calificacion(models.Model):
 
     def __str__(self):
         return f"{self.asignatura} - {self.nota}"
+################################################
+# PROYECTOS
+################################################
+class Proyecto(models.Model):
+    titulo = models.CharField(max_length=255)
+    lenguaje = models.CharField(max_length=100)
+    tecnologias = models.TextField()
+    observaciones = models.TextField(blank=True, null=True)
+    fecha_publicacion = models.DateField()
+
+    class Meta:
+        verbose_name = "Proyecto"
+        verbose_name_plural = "Proyectos"
+        ordering = ['id']
+
+    def __str__(self):
+        return self.titulo

@@ -31,7 +31,7 @@ from .models import Tarea, Estado
 from django.http import HttpResponse
 from django.utils.timezone import now
 from django.shortcuts import render, redirect
-from .forms import TareaForm
+from .forms import TareaForm, ProyectoForm
 
 
 
@@ -332,7 +332,7 @@ def editar_video(request, video_id):
     if request.method =='POST' and request.FILES.get('nuevo_video'):
         #Actualizamos el video
         video.video == request.FILES['nuevo_video']
-        print("entra" + str(video.video)).
+        print("entra" + str(video.video))
         video.save()
         return redirect('subir_videos') #Redirige a la galeria de imagenes
     return redirect('subir_videos')
@@ -725,3 +725,46 @@ def añadir_calificacion(request):
             Calificacion.objects.create(asignatura=asignatura, nota=nota)
         return redirect('lista_calificaciones')  # Asegúrate de que redirige aquí
     return render(request, 'agregar_calificacion.html')
+################################################
+# PROYECTOS
+################################################
+
+def lista_proyectos(request):
+    proyectos = Proyecto.objects.all()
+    return render(request, 'lista_proyectos.html', {'proyectos': proyectos})
+
+
+def detalle_proyecto(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+    return render(request, 'detalle_proyecto.html', {'proyecto': proyecto})
+
+
+def crear_proyecto(request):
+    if request.method == 'POST':
+        form = ProyectoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_proyectos')
+    else:
+        form = ProyectoForm()
+    return render(request, 'crear_proyecto.html', {'form': form})
+
+
+def editar_proyecto(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+    if request.method == 'POST':
+        form = ProyectoForm(request.POST, instance=proyecto)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_proyectos')
+    else:
+        form = ProyectoForm(instance=proyecto)
+    return render(request, 'editar_proyecto.html', {'form': form})
+
+
+def eliminar_proyecto(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+    if request.method == 'POST':
+        proyecto.delete()
+        return redirect('lista_proyectos')
+    return render(request, 'eliminar_proyecto.html', {'proyecto': proyecto})
